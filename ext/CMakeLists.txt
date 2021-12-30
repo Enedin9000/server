@@ -12,3 +12,9 @@ CPMAddPackage(
     GITHUB_REPOSITORY LandSandBoat/efsw
     GIT_TAG b477e1c8f00bf483b1be256321d5e32784d6df96
 )
+
+CPMAddPackage(
+    NAME argparse
+    GITHUB_REPOSITORY p-ranav/argparse
+    GIT_TAG 4cacdc4b30da8e9bdc8aefb6dea575b345da8b2b
+)
