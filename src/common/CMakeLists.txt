@@ -43,7 +43,7 @@ target_link_libraries(common
     argparse
     project_options
     #PRIVATE
-    #project_warnings
+    project_warnings
 )
  
 if(TRACY_ENABLE)
