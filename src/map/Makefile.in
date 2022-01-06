@@ -109,7 +109,7 @@ endif
 all: $(ALL_DEPENDS)
 
 clean :
-   rm -rf *.o obj_map ../../map-server
+   rm -rf *.o obj_map ../../zone-server
 help:
 
 
@@ -129,16 +129,16 @@ needs_mysql:
    @echo "MySQL not found or disabled by the configure script"
    @exit 1
 
-server: obj_map map-server
+server: obj_map zone-server
 
-map-server: $(MAP_OBJ) $(COMMON_OBJ) obj_map/socket.o
-#   g++ -o ../../map-server $(COMMON_OBJ) obj_map/socket.o $(MAP_OBJ) -lrt -lm  -L/usr/lib/mysql -L/usr/lib -ldl -L/usr/lib/mysql -lmysqlclient -lpthread -lz -lm -lrt -lssl -lcrypto -ldl -llua-5.1
-   g++  -o ../../map-server $(COMMON_OBJ) obj_map/socket.o $(MAP_OBJ) -lrt -lm  -L/usr/lib/mysql -L/usr/lib -ldl -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient -lpthread -lz -lm -lrt -lssl -lcrypto -llua-5.1
+zone-server: $(MAP_OBJ) $(COMMON_OBJ) obj_map/socket.o
+#   g++ -o ../../zone-server $(COMMON_OBJ) obj_map/socket.o $(MAP_OBJ) -lrt -lm  -L/usr/lib/mysql -L/usr/lib -ldl -L/usr/lib/mysql -lmysqlclient -lpthread -lz -lm -lrt -lssl -lcrypto -ldl -llua-5.1
+   g++  -o ../../zone-server $(COMMON_OBJ) obj_map/socket.o $(MAP_OBJ) -lrt -lm  -L/usr/lib/mysql -L/usr/lib -ldl -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient -lpthread -lz -lm -lrt -lssl -lcrypto -llua-5.1
 
 obj_map/socket.o: ../common/socket.cpp ../common/socket.h
    g++ -std=c++0x -DdsUDPSERV  -DHAVE_SETRLIMIT -Wno-unused -Wno-parentheses   -I../common -c $(OUTPUT_OPTION) $<
 
-obj_map: 
+obj_map:
    -mkdir obj_map
    -mkdir obj_map/packets
    -mkdir obj_map/items
