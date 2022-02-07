@@ -121,7 +121,6 @@ xi.promyvion.onRegionEnter = function(player, region)
         local ID = zones[player:getZoneID()]
         local regionId = region:GetRegionID()
         local event = nil
-        -- something somewhere
 
         if regionId < 100 then
             event = ID.npc.MEMORY_STREAMS[regionId][7][1]
