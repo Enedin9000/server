@@ -5,7 +5,7 @@
     "C_Cpp.intelliSenseEngineFallback": "Enabled",
 
     "editor.bracketPairColorization.enabled": true,
-    "editor.renderWhitespace": "all",
+    "editor.renderWhitespace": "none",
     "editor.renderControlCharacters": true,
     "editor.trimAutoWhitespace": true,
 
