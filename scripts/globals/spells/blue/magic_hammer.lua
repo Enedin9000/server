@@ -50,15 +50,21 @@ spellObject.onSpellCast = function(caster, target, spell)
 
     local damage = 0
     if target:isUndead() then
-        spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT) -- No effect
+        spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
     else
         damage = blueDoMagicalSpell(caster, target, spell, params)
         damage = blueFinalizeDamage(caster, target, spell, damage, params)
-        caster:addMP(utils.clamp(damage,0,target:getMP()))
+
+        local mpDrained = utils.clamp(damage, 0, target:getMP())
+        if mpDrained == 0 then
+            spell:setMsg(xi.msg.basic.MAGIC_DMG)
+        else
+            damage = mpDrained
+            caster:addMP(damage)
+            target:delMP(damage)
+            spell:setMsg(xi.msg.basic.MAGIC_DRAIN_MP)
+        end
     end
-
-    -- weirdly this spell returns MP dmg message even if nothing's here wtf
-
     return damage
 end
 
