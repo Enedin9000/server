@@ -46,7 +46,7 @@ spellObject.onSpellCast = function(caster, target, spell)
         end
 
         local agiDown = utils.clamp(caster:getMainLvl() / 2, 0, 49)
-        local dot = utils.clamp(math.floor((agiDown - 3) / 2),0,23)
+        local dot = utils.clamp(math.floor((agiDown - 3) / 2), 0, 23)
         spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
 
         if target:addStatusEffect(params.effect, dot, tick, duration * resist) then

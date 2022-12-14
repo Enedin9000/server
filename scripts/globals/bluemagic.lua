@@ -29,27 +29,29 @@ end
 
 -- Get WSC
 local function bluGetWSC(attacker, params)
-    local wsc = (attacker:getStat(xi.mod.STR) * params.str_wsc + attacker:getStat(xi.mod.DEX) * params.dex_wsc +
-        attacker:getStat(xi.mod.VIT) * params.vit_wsc + attacker:getStat(xi.mod.AGI) * params.agi_wsc +
-        attacker:getStat(xi.mod.INT) * params.int_wsc + attacker:getStat(xi.mod.MND) * params.mnd_wsc +
-        attacker:getStat(xi.mod.CHR) * params.chr_wsc) * bluGetAlpha(attacker:getMainLvl())
+    local wsc = bluGetAlpha(attacker:getMainLvl()) * (
+    attacker:getStat(xi.mod.STR) * params.str_wsc +
+    attacker:getStat(xi.mod.DEX) * params.dex_wsc +
+    attacker:getStat(xi.mod.VIT) * params.vit_wsc +
+    attacker:getStat(xi.mod.AGI) * params.agi_wsc +
+    attacker:getStat(xi.mod.INT) * params.int_wsc +
+    attacker:getStat(xi.mod.MND) * params.mnd_wsc +
+    attacker:getStat(xi.mod.CHR) * params.chr_wsc)
     return wsc
 end
 
 -- Get cRatio
 local function bluGetcRatio(ratio, atk_lvl, def_lvl)
 
-    -- Apply level penalty
+    -- Get ratio with level penalty
     local levelcor = 0
     if atk_lvl < def_lvl then
         levelcor = 0.05 * (def_lvl - atk_lvl)
     end
     ratio = ratio - levelcor
-
-    -- Clamp
     ratio = utils.clamp(ratio,0,2)
 
-    -- Obtain cRatiomin
+    -- Get cRatiomin
     local cratiomin = 0
     if ratio < 1.25 then
         cratiomin = 1.2 * ratio - 0.5
@@ -59,7 +61,7 @@ local function bluGetcRatio(ratio, atk_lvl, def_lvl)
         cratiomin = 1.2 * ratio - 0.8
     end
 
-    -- Obtain cRatiomax
+    -- Get cRatiomax
     local cratiomax = 0
     if ratio < 0.5 then
         cratiomax = 0.4 + 1.2 * ratio
@@ -68,16 +70,15 @@ local function bluGetcRatio(ratio, atk_lvl, def_lvl)
     elseif ratio <= 2 and ratio > 0.833 then
         cratiomax = 1.2 * ratio
     end
+
+    -- Return data
     local cratio = {}
     if cratiomin < 0 then
         cratiomin = 0
     end
-
-    -- Return data
     cratio[1] = cratiomin
     cratio[2] = cratiomax
     return cratio
-
 end
 
 -- Get the fTP multiplier (by applying 2 straight lines between ftp0-ftp1500 and ftp1500-ftp3000)
@@ -112,6 +113,7 @@ local function bluGetfSTR(dSTR)
     else
         fSTR2 = (dSTR + 13) / 2
     end
+
     return fSTR2
 end
 
@@ -135,6 +137,7 @@ local function bluGetCorrelation(spellEcosystem, monsterEcosystem, merits)
     if effect > 0 then -- merits don't impose a penalty, only a benefit in case of strength
         effect = effect + 0.001 * merits
     end
+
     return effect
 end
 
@@ -223,7 +226,6 @@ function bluDoPhysicalSpell(caster, target, spell, params)
             else
                 finaldmg = finaldmg + (finalD * (1 + correlationMultiplier) * pdif)
             end
-
             hitslanded = hitslanded + 1
 
             -- increment target's TP (100TP per hit landed)
@@ -313,7 +315,6 @@ function bluDoDrainSpell(caster, target, spell, params, softCap, mpDrain)
     end
 
     return dmg
-
 end
 
 -- Get the damage and resistance for a breath Blue Magic spell
@@ -343,7 +344,6 @@ function bluDoBreathSpell(caster, target, spell, params, isConal)
             -- linear function: from 22° to 45° > 100% to 50% dmg
             -- caster:PrintToPlayer(string.format("angle " .. angle * 1.4117 .. "   mult " .. angleDmgMultiplier))
         dmg = dmg * angleDmgMultiplier
-
     end
 
     -- Monster correlation
@@ -367,7 +367,6 @@ function bluDoBreathSpell(caster, target, spell, params, isConal)
     results[1] = dmg
     results[2] = resistance
     return results
-
 end
 
 -- Finalize HP damage after a spell
@@ -376,6 +375,7 @@ function bluFinalizeDamage(caster, target, spell, dmg, params)
     if dmg < 0 then
         dmg = 0
     end
+
     dmg = dmg * xi.settings.main.BLUE_POWER
     local attackType = params.attackType or xi.attackType.NONE
     local damageType = params.damageType or xi.damageType.NONE
@@ -409,7 +409,6 @@ end
 
 -- Get the duration of an enhancing Blue Magic spell
 function bluGetDurationWithDiffusion(caster, duration)
-
     if caster:hasStatusEffect(xi.effect.DIFFUSION) then
         local merits = caster:getMerit(xi.merit.DIFFUSION)
         if merits > 0 then -- each merit after the first increases duration by 5%
@@ -450,9 +449,7 @@ function bluDoEnfeeblingSpell(caster, target, spell, params, power, tick, durati
     end
 
     return params.effect
-
 end
-
 
 -- Perform a curative Blue Magic spell
 function bluDoCuringSpell(caster, target, spell, params)
@@ -480,8 +477,7 @@ function bluDoCuringSpell(caster, target, spell, params)
     spell:setMsg(xi.msg.basic.MAGIC_RECOVERS_HP)
 
     return final
-
-end    
+end
 
 -- Inflict an added enfeebling effect (after a physical spell)
 function bluDoPhysicalSpellAddedEffect(caster, target, spell, params, damage, power, tick, duration)
@@ -498,7 +494,6 @@ function bluDoPhysicalSpellAddedEffect(caster, target, spell, params, damage, po
             target:addStatusEffect(params.effect, power, tick, duration * resist)
         end
     end
-
 end
 
 -- Inflict an added enfeebling effect (after a magical spell)
@@ -513,7 +508,6 @@ function bluDoMagicalSpellAddedEffect(caster, target, spell, params, power, tick
     if resist >= 0.5 then
         target:addStatusEffect(params.effect, power, tick, duration * resist)
     end
-
 end
 
 --[[
@@ -531,8 +525,7 @@ end
         https://www.bluegartr.com/threads/37619-Blue-Mage-Best-thread-ever?p=5437135&viewfull=1#post5437135
         https://www.bluegartr.com/threads/107650-Random-Question-Thread-XXIV-Occupy-the-RQT?p=4906565&viewfull=1#post4906565
     - When values were absent, spell values were decided based on Blue Gartr threads and Wiki page discussions.
-
-- Assumed INT as the main magic accuracy modifier for physical spells' additional effects (when no data was found).
+    - Assumed INT as the main magic accuracy modifier for physical spells' additional effects (when no data was found).
 
 ---------------------------
 Changes in blu_fixes branch
@@ -647,10 +640,6 @@ Changes in blu_fixes branch
 
 
 CLEANUP*********************
-
-- TODO OWN:
-    - Set spells: DELAY can I do that?
-    - Physical AE into one function with params.effect?
 - Getstats, put back
 - Magic, remove prints
 - Remove defmode, although it might come in handy (put in modules for yourself)
