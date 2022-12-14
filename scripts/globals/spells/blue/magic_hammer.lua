@@ -52,8 +52,8 @@ spellObject.onSpellCast = function(caster, target, spell)
     if target:isUndead() then
         spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
     else
-        damage = blueDoMagicalSpell(caster, target, spell, params)
-        damage = blueFinalizeDamage(caster, target, spell, damage, params)
+        damage = bluDoMagicalSpell(caster, target, spell, params)
+        damage = bluFinalizeDamage(caster, target, spell, damage, params)
 
         local mpDrained = utils.clamp(damage, 0, target:getMP())
         if mpDrained == 0 then
