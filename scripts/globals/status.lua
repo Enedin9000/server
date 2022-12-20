@@ -871,7 +871,8 @@ xi.effect =
     HYSTERIA                 = 804, -- Used for Hysteroanima to stop after readying a weaponskill with no msg.
     TOMAHAWK                 = 805, -- Silent status effect inflicted by a Warrior using the "Tomahawk" job ability
 
-    -- 806-1022
+    BLUE_MAGIC_LOCK          = 806, -- Prevents the use of Blue Magic (Supernova special)
+
     -- PLACEHOLDER           = 1023 -- The client dat file seems to have only this many "slots", results of exceeding that are untested.
 }
 
