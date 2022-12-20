@@ -745,12 +745,12 @@ enum EFFECT
     EFFECT_HYSTERIA            = 804, // Used for Hysteroanima to stop after readying a weaponskill with no msg.
     EFFECT_TOMAHAWK            = 805, // Silent status effect inflicted by a Warrior using the "Tomahawk" job ability
 
-    EFFECT_BLUE_MAGIC_LOCK     = 806, // Prevents the use of Blue Magic (Supernova special)
+    EFFECT_BLUE_MAGIC_LOCK     = 900, // Prevents the use of Blue Magic (Supernova special)
 
     // EFFECT_PLACEHOLDER           = 1023 // The client dat file seems to have only this many "slots", results of exceeding that are untested.
 };
 
-#define MAX_EFFECTID 807 // 768 real + 38 custom
+#define MAX_EFFECTID 901 // 768 real + 38 custom
 
 /************************************************************************
  *                                                                       *
